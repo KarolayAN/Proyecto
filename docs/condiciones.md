@@ -43,7 +43,7 @@ double dx = x - 0.5;
 
 **3) Onda Senosoidal:**
 
-La onda Senoidal simula el patron oscilante de calor; en donde la temperatura del dominio subiera y bajara de forma periodica. Esta condicion representa una superposicion de modos termicos y es muy util para ver como se disipan modos oscilatorios de calor en el tiempo. 
+La onda Senoidal simula el patron oscilante de calor; en donde la temperatura del dominio sube y baja de forma periodica. Esta condicion representa una superposicion de modos termicos y es muy util para ver como se disipan modos oscilatorios de calor en el tiempo. 
 
 En Python:
 
