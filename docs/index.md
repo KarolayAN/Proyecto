@@ -1,8 +1,10 @@
-## Proyecto final
+# Ecuación de Calor en 2D
 
-## Ecuacion de Calor en Dos Dimensiones
+Universidad de Costa Rica
 
-**Universidad de Costa Rica**
+Proyecto Final de Física Computacional
+
+I Semestre 2025
 
 **Nombre de los estudiantes:**
 
