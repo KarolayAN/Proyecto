@@ -11,10 +11,12 @@ En Python:
     u[:, :] = np.exp(-100 * ((X - 0.5)**2 + (Y - 0.5)**2)) 
 
 En C++:
+
+```cpp
 double dx = x - 0.5;
             double dy = y - 0.5;
             return exp(-100 * (dx * dx + dy * dy));
-
+```
 
 **2) Paraboloide Centrado:**
 
@@ -24,9 +26,13 @@ En Python:
     u[:, :] = 10 * ((X - 0.5)**2 + (Y - 0.5)**2)
 
 En C++:
+
+```cpp
 double dx = x - 0.5;
             double dy = y - 0.5;
             return 10.0 * (dx * dx + dy * dy);
+```
+
 
 **3) Onda Senosoidal:**
 
@@ -36,9 +42,10 @@ En Python:
     u[:, :] = np.sin(2 * np.pi * X) * np.sin(2 * np.pi * Y)
 
 En C++:
+```cpp
  const double Pi = 3.1415926535;
             return sin(2 * Pi * x) * sin(2 * Pi * y);
-    
+```
 ----------------------------------------------------------------------------------------------------------------------
 
 ## Condiciones de Frontera 
@@ -54,10 +61,12 @@ En Python:
 
 En C++:
 
+```cpp
 matriz[i * n + 0] = 0;
                 matriz[i * n + (n - 1)] = 0;
                 matriz[0 * n + i] = 0;
                 matriz[(n - 1) * n + i] = 0;
+```
 
 **2) Neumann:**
 
@@ -71,10 +80,14 @@ Neumann simula que los bordes estan aislados termicamente, el calor no puede sal
 
 En C++:
 
+```cpp
 matriz[i * n + 0] = matriz[i * n + 1];
                 matriz[i * n + (n - 1)] = matriz[i * n + (n - 2)];
                 matriz[0 * n + i] = matriz[1 * n + i];
                 matriz[(n - 1) * n + i] = matriz[(n - 2) * n + i];
+```
+
+
 **3) Robin:**
 
 Robin es una condición mixta de Neumann y Dirichlet que modela un intercambio de calor con el ambiente exterior. El parametro beta es el coeficiente de conveccion, por lo que si beta es grande, se pierde calor mas rapido y si beta es pequeño, se pierde calor lentamente. Se establece una relación entre la temperatura en la frontera y su derivada normal.
@@ -88,8 +101,9 @@ En Python:
 
 En C++:
 
+```cpp
 matriz[i * n + 0] = matriz[i * n + 1] / (1 + beta * ds);
                 matriz[i * n + (n - 1)] = matriz[i * n + (n - 2)] / (1 + beta * ds);
                 matriz[0 * n + i] = matriz[1 * n + i] / (1 + beta * ds);
                 matriz[(n - 1) * n + i] = matriz[(n - 2) * n + i] / (1 + beta * ds);
-
+```
