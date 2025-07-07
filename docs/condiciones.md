@@ -86,10 +86,10 @@ Neumann simula que los bordes estan aislados termicamente, el calor no puede sal
  En Python:
 
  ```py
-    #u_proxima[0, :] = u_proxima[1, :]
-    #u_proxima[-1, :] = u_proxima[-2, :]
-    #u_proxima[:, 0] = u_proxima[:, 1]
-    #u_proxima[:, -1] = u_proxima[:, -2]
+    u_proxima[0, :] = u_proxima[1, :]
+    u_proxima[-1, :] = u_proxima[-2, :]
+    u_proxima[:, 0] = u_proxima[:, 1]
+    u_proxima[:, -1] = u_proxima[:, -2]
 ```
 
 En C++:
