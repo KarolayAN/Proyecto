@@ -8,7 +8,9 @@ Esta condicion simula una fuente de calor muy localizada, la temperatura es mas 
 
 En Python:
 
+```py
     u[:, :] = np.exp(-100 * ((X - 0.5)**2 + (Y - 0.5)**2)) 
+```
 
 En C++:
 
