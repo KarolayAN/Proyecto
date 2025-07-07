@@ -9,7 +9,8 @@ Esta condicion simula una fuente de calor muy localizada, la temperatura es mas 
 En Python:
 
 ```py
-    u[:, :] = np.exp(-100 * ((X - 0.5)**2 + (Y - 0.5)**2)) 
+    if tipo == 'gauss':
+            self.u[:, :] = np.exp(-100 * ((self.X - 0.5) ** 2 + (self.Y - 0.5) ** 2))
 ```
 
 En C++:
