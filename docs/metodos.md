@@ -39,7 +39,7 @@ Esto reduce el problema de 2D a varios problemas 1D, que son mucho más fáciles
 
  ## Matriz Tridiagonal
  
- En el proceso de implementación del método de Crank-Nicolson y API para la resolución de la ecuación de calor; organuzando los terminos, la rucación se convierte en una ecuación matricial de la forma: **$A\vec{\phi^{n+1}}=\vec{d^n}$**, donde A es una mtriz es tridiagonal de N dimensiones, con N números de subdivisiones de la descretización espacial, esto se puede visualizar como:
+ En el proceso de implementación del método de Crank-Nicolson y ADI para la resolución de la ecuación de calor; organuzando los terminos, la ecuación se convierte en una ecuación matricial de la forma: **$A\vec{\phi^{n+1}}=\vec{d^n}$**, donde A es una mtriz es tridiagonal de N dimensiones, con N números de subdivisiones de la descretización espacial, esto se puede visualizar como:
 
  ![Matriz Tridiadonal](imagenes/thomas.png) 
  
