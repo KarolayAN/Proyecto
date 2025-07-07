@@ -15,11 +15,12 @@ extra_javascript:
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
     
 nav:
-  - Introduccion: index.md 
-  - Metodologi: metodos.md
+  - Introducción: index.md 
+  - Metodología: metodos.md
   - Resultados: resultados.md
   - Solucion C++: c++.md
   - Solucion Python: python.md
+  - Bibligrafía: bibliografia.md
 
 
 
