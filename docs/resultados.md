@@ -10,7 +10,7 @@ Los resultados que se presentan en este apartado corresponden a la simulación n
 ![Simulacion](imagenes/AA.gif) 
 
 
-En base a lo observado la solucion de dichos graficos es simetrica, lo cual se espera por la simetria del pulso y la geometria cuadrada. La temperaturadecrece hacia los bordes, puesto que al tener la condicion inicial de Dirichlet, la temperatura es fija en cero. Hay presencia de contornos concentricos desde el centro hacia afuera, indicando asi una difusion isotropica, es decir, una difusion igual en todas las direcciones. 
+En base a lo observado la solucion de dichos graficos es simetrica, lo cual se espera por la simetria del pulso y la geometria cuadrada. La temperatura decrece hacia los bordes, puesto que al tener la condicion inicial de Dirichlet, la temperatura es fija en cero. Hay presencia de contornos concentricos desde el centro hacia afuera, indicando asi una difusion isotropica, es decir, una difusion igual en todas las direcciones. 
 El comportamiento del grafico y la simulacion es correcto, puesto que la difusion se comporta como predice la ecuacion de calor, es decir, que se presenta una distribucion de temperatura uniforme, no hay oscilaciones artificiales ni errores numericos y se cumplen las condiciones de frontera establecidas. 
 
 
