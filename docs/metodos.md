@@ -30,8 +30,10 @@ En lugar de resolver una ecuación implícita en dos dimensiones al mismo tiempo
 Esto reduce el problema de 2D a varios problemas 1D, que son mucho más fáciles de resolver. Cuando se utiliza ADI, en cada paso intermedio es necsario resolver muchos sistemas 1D implícitos (uno por cada fila o columna) con forma tridiagonal.
 
  ## Matriz Tridiagonal
- En el proceso de implementación del método de Crank-Nicolson y API para la resolución de la ecuación de calor; organuzando los terminos, la rucación se convierte en una ecuación matricial de la forma: **$A\vec{\phi^{n+1}}=\vec{d^n}$**, donde A es una mtriz es tridiagonal de N dimensiones, con N números de subdivisiones de la descretización espacial. 
- <img src="imagenes/thomas.png" alt="Método de Thomas" width="550">
+ En el proceso de implementación del método de Crank-Nicolson y API para la resolución de la ecuación de calor; organuzando los terminos, la rucación se convierte en una ecuación matricial de la forma: **$A\vec{\phi^{n+1}}=\vec{d^n}$**, donde A es una mtriz es tridiagonal de N dimensiones, con N números de subdivisiones de la descretización espacial, esto se puede visualizar como:
+
+ ![Matriz Tridiadonal](imagenes/thomas.png) 
+ 
 
  Una matriz tridiagonal es una matriz en la que solo los elementos de la diagonal principal y las dos diagonales adyacentes (la superior y la inferior) pueden tener valores distintos de cero. Este patrón de estructura permite representar de manera eficiente operadores como el Laplaciano en una dimensión espacial. En el caso del esquema de Crank-Nicolson, este tipo de matriz se forma tanto en la parte implícita como en la parte explícita del método.
 
