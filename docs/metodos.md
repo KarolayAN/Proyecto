@@ -5,7 +5,7 @@ Al buscar una metodología numérica para resolver la ecuación de calor, se pue
 ## Método de Crank-Nicolson
 
 Este método consiste en una técnica numérica para resolver ecuaciones diferenciales parciales, especialmente la ecuacion de calor o ecuación de difusión. Es un metodo semi-implicito y de segundo orden; por lo que combina la precisión del método del punto medio y la estabilidad del método implicito. 
-Este método se basa en una promediación entre el método explícito, que evalúa  en el tiempo actual $t_n$ y el método implicito, que evalúa en el siguiente tiempo $t_n+1$. 
+Este método se basa en una promediación entre el método explícito, que evalúa  en el tiempo actual $t_n$ y el método implicito, que evalúa en el siguiente tiempo $t_{n+1}$. 
 
 En el apartado de los codigos, se explicara a detalle los codigos realizados con el fin de comprender a totalidad cómo funciona el método de Crank-Nicolson para resolver la ecuacion de calor en 2D. 
 
