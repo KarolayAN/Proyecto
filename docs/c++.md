@@ -400,9 +400,12 @@ La condición **Robin** (`condicion_frontera == 3`) combina las dos anteriores e
         imprimirMatriz(matriz, n);
     }
 };
+```
 
-**Función main**\
-Inicializa todo el código para resolver la ecuación de calor en 2-D. Para esto el usuario primero debe de escoger una de las tres condiciones iniciales y una de las tres condiciones de frontera. El programa evalúa dicha condición incial usando el método de Crank Nicholson y la reducción de la matriz tridiagonal con el método de Thomas, y luego imprime el resultado obtenido.\
+**Función main**
+
+Inicializa todo el código para resolver la ecuación de calor en 2-D. Para esto el usuario primero debe de escoger una de las tres condiciones iniciales y una de las tres condiciones de frontera. El programa evalúa dicha condición incial usando el método de Crank Nicholson y la reducción de la matriz tridiagonal con el método de Thomas, y luego imprime el resultado obtenido.
+
 `return 0` si el programa se ejecuta sin ningún problema, y 1 si la opción elegida no era válida.
 
 ```cpp
