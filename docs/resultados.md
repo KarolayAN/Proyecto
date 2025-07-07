@@ -32,5 +32,5 @@ Por lo que los resultados de este grafico y simulacion son los esperados, ya que
 ![Simulacion](imagenes/CC.gif) 
 
 
-Se logra observar que el patron senoidal se conserva, lo que sugiere una posible solucion estacionaria o un estado inicial muy cercano al equilibrio. EL grafico y la simulacion muestra dos maximos positivos y dos minimos negativos, lo que es correcto cuando se trabaja con una onda con 2 ciclos en cada eje. Los valores son muy pequeno, lo que indica que el sistema esta cerrado cerca del equilibrio termico o con condiciones suaves.
+Se logra observar que el patron senoidal se conserva, lo que sugiere una posible solucion estacionaria o un estado inicial muy cercano al equilibrio. EL grafico y la simulacion muestra dos maximos positivos y dos minimos negativos, lo que es correcto cuando se trabaja con una onda con 2 ciclos en cada eje. Los valores son muy pequenos, lo que indica que el sistema esta cerrado cerca del equilibrio termico o con condiciones suaves.
 La condicion de frontera de Robin, permite un intercambio parcial de calor en los bordes, lo que es coherente con la conservacion parcial del perfil de onda, ademas, en soluciones senoidales estacionarias es comun ver un patron simetrico y balanceado positivo-negativo, lo cual, se logra apreciar en el grafico y la simulacion. 
