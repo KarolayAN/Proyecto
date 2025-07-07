@@ -1,0 +1,25 @@
+site_name: Ecuacion de calor en 2D
+
+theme:
+  name: material
+  palette:
+    primary: indigo
+    accent: pink
+
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+    
+nav:
+  - Introduccion: index.md 
+  - Metodologi: metodos.md
+  - Resultados: resultados.md
+  - Solucion C++: c++.md
+  - Solucion Python: python.md
+
+
+
