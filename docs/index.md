@@ -6,6 +6,8 @@ Proyecto Final de Física Computacional
 
 I Semestre 2025
 
+El repositorio del proyecto puede ser consultado en: https://github.com/KarolayAN/Proyecto
+
 **Nombre de los estudiantes:**
 
 Alba Sofia Rojas Doza (C36873)
