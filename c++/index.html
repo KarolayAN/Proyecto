@@ -9,7 +9,7 @@
       
       
       
-        <link rel="prev" href="../resultados/">
+        <link rel="prev" href="../condiciones/">
       
       
         <link rel="next" href="../python/">
@@ -246,12 +246,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../resultados/" class="md-nav__link">
+      <a href="../condiciones/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Resultados
+    Condiciones
     
   </span>
   
@@ -322,6 +322,28 @@
   
   
     <li class="md-nav__item">
+      <a href="../resultados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Resultados
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../bibliografia/" class="md-nav__link">
         
   
@@ -375,21 +397,29 @@
 <p>El presente código en C++ tiene como objetivo resolver la ecuación de calor en dos dimensiones. Para resolverla de forma eficiente, el código implementa el método Crank–Nicolson con Alternating Direction Implicit (ADI). Este método permite dividir cada paso temporal en dos subpasos alternados en dirección horizontal y vertical, facilitando la resolución de matrices tridiagonales mediante el eficiente método de Thomas.</p>
 <p>Además, se integran técnicas de paralelismo de memoria compartida usando OpenMP, lo que permite reducir significativamente los tiempos de cálculo. El código está diseñado para permitir la elección entre distintas condiciones iniciales</p>
 <hr />
-<p>La siguiente función crea una matriz representada como un vector de 1D:\
-Se utilizaron las siguientes bibliotecas:</p>
+<p>La siguiente función crea una matriz representada como un vector de 1D:</p>
+<p>Se utilizaron las siguientes bibliotecas:</p>
 <ul>
-<li><code>&lt;iostream&gt;</code>: Para poder utilizar inputs y outputs con std.</li>
-<li><code>&lt;cmath&gt;</code>: Para poder agregar funciones matemáticas</li>
-<li><code>&lt;vector&gt;</code>: Para poder usar std::vector</li>
-<li><code>&lt;omp.h&gt;</code>: Para paralelizar con OpenMP</li>
+<li>
+<p><code>&lt;iostream&gt;</code>: Para poder utilizar inputs y outputs con std.</p>
+</li>
+<li>
+<p><code>&lt;cmath&gt;</code>: Para poder agregar funciones matemáticas</p>
+</li>
+<li>
+<p><code>&lt;vector&gt;</code>: Para poder usar std::vector</p>
+</li>
+<li>
+<p><code>&lt;omp.h&gt;</code>: Para paralelizar con OpenMP</p>
+</li>
 </ul>
 <pre><code class="language-cpp">#include &lt;iostream&gt;
 #include &lt;cmath&gt;
 #include &lt;vector&gt;
 #include &lt;omp.h&gt;
 </code></pre>
-<p><strong>Función que crea una matriz llena de ceros, y la almacena en 1 vector de 1D</strong>
-<code>crearMatrizCeros(int n, int m)</code> genera una matriz de ceros con <code>n</code> filas y <code>m</code> columnas, representada como un vector unidimensional (<code>std::vector&lt;double&gt;</code>) de tamaño <code>n × m</code>. </p>
+<p><strong>Función que crea una matriz llena de ceros, y la almacena en 1 vector de 1D</strong></p>
+<p><code>crearMatrizCeros(int n, int m)</code> genera una matriz de ceros con <code>n</code> filas y <code>m</code> columnas, representada como un vector unidimensional (<code>std::vector&lt;double&gt;</code>) de tamaño <code>n × m</code>. </p>
 <p><code>[i * n + j]</code> convierte coordenadas bidimensionales (i, j) fila y columna de una matriz 2D, en una posición dentro de un vector de una sola dimensión (1D).</p>
 <p><code>[i * n + j]</code> se utiliza para convertir coordenadas bidimensionales <code>(i, j)</code> donde <code>i</code> representa la fila y <code>j</code> la columna en una única posición dentro de un vector unidimensional que simula una matriz 2D. En este contexto, <code>n</code> es el número total de columnas. Esto permite representar matrices como arreglos lineales de una sola dimensión, lo cual es más eficiente en términos de memoria y procesamiento.</p>
 <p>Todos los valores se inicializan en cero (<code>0.0</code>), lo que es importante para establecer una temperatura base uniforme</p>
