@@ -1,7 +1,7 @@
 # Análisis de resultados 
 
 
-Los resultados que se presentan a en este apartado corresponden a la simulación numérica de la ecuación de calor en dos dimensiones resuelta mediante el método de Crank-Nicolson-ADI. Las gráficas muestran la evolución del perfil de temperatura en la malla, partiendo de distintas condiciones iniciales (distribuciones gaussianas, paraboloides u ondas senoidales) y bajo diferentes tipos de condiciones de frontera (Dirichlet, Neumann o Robin). Estas simulaciones permiten observar cómo el calor se distribuye y disipa a lo largo del dominio con el paso del tiempo.
+Los resultados que se presentan en este apartado corresponden a la simulación numérica de la ecuación de calor en dos dimensiones resuelta mediante el método de Crank-Nicolson-ADI. Las gráficas muestran la evolución del perfil de temperatura en la malla, partiendo de distintas condiciones iniciales (distribuciones gaussianas, paraboloides u ondas senoidales) y bajo diferentes tipos de condiciones de frontera (Dirichlet, Neumann o Robin). Estas simulaciones permiten observar cómo el calor se distribuye y disipa a lo largo del dominio con el paso del tiempo.
 
 ### Grafico y simulacion del pulso Gaussiano con condicion de frontera de Dirichlet.
 
