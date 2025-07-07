@@ -28,7 +28,8 @@ En esta condicion inicial, el centro esta mas frio y la temperatura aumenta haci
 En Python:
 
 ```py
-    u[:, :] = 10 * ((X - 0.5)**2 + (Y - 0.5)**2)
+    elif tipo == 'paraboloide':
+            self.u[:, :] = 10 * ((self.X - 0.5) ** 2 + (self.Y - 0.5) ** 2)
 ```
 
 En C++:
@@ -47,7 +48,8 @@ La onda Senoidal simula el patron oscilante de calor; en donde la temperatura de
 En Python:
 
 ```py
-    u[:, :] = np.sin(2 * np.pi * X) * np.sin(2 * np.pi * Y)
+    elif tipo == 'senoidal':
+            self.u[:, :] = np.sin(2 * np.pi * self.X) * np.sin(2 * np.pi * self.Y)
 ```
 
 En C++:
@@ -68,7 +70,11 @@ Al resolver la ecuacion de calor en 2D, se debe de decirle al programa que es lo
 En Python:
 
 ```py
-    u_proxima[0, :] = 0; u_proxima[-1, :] = 0; u_proxima[:, 0] = 0; u_proxima[:, -1] = 0
+    if frontera == 'dirichlet':
+                self.u_proxima[0, :] = 0 
+                self.u_proxima[-1, :] = 0 
+                self.u_proxima[:, 0] = 0 
+                self.u_proxima[:, -1] = 0 
 ```
 
 En C++:
@@ -87,10 +93,11 @@ Neumann simula que los bordes estan aislados termicamente, el calor no puede sal
  En Python:
 
  ```py
-    u_proxima[0, :] = u_proxima[1, :]
-    u_proxima[-1, :] = u_proxima[-2, :]
-    u_proxima[:, 0] = u_proxima[:, 1]
-    u_proxima[:, -1] = u_proxima[:, -2]
+    elif frontera == 'neumann':
+                self.u_proxima[0, :] = self.u_proxima[1, :] 
+                self.u_proxima[-1, :] = self.u_proxima[-2, :] 
+                self.u_proxima[:, 0] = self.u_proxima[:, 1] 
+                self.u_proxima[:, -1] = self.u_proxima[:, -2] 
 ```
 
 En C++:
@@ -110,11 +117,12 @@ Robin es una condición mixta de Neumann y Dirichlet que modela un intercambio d
 En Python:
 
 ```py
-    beta = 3.0 # Se puede modificar el valor  (Coeficiente de transferencia de calor en fronteras [W/m²K])
-    u_proxima[0, :] = u_proxima[1, :] / (1 + beta * dx)
-    u_proxima[-1, :] = u_proxima[-2, :] / (1 + beta * dx)
-    u_proxima[:, 0] = u_proxima[:, 1] / (1 + beta * dy)
-    u_proxima[:, -1] = u_proxima[:, -2] / (1 + beta * dy)
+   elif frontera == 'robin':
+                beta = 3.0 
+                self.u_proxima[0, :] = self.u_proxima[1, :] / (1 + beta * self.dx) 
+                self.u_proxima[-1, :] = self.u_proxima[-2, :] / (1 + beta * self.dx) 
+                self.u_proxima[:, 0] = self.u_proxima[:, 1] / (1 + beta * self.dy) 
+                self.u_proxima[:, -1] = self.u_proxima[:, -2] / (1 + beta * self.dy)
 ```
 
 En C++:
