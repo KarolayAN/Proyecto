@@ -17,10 +17,12 @@ extra_javascript:
 nav:
   - Introducción: index.md 
   - Metodología: metodos.md
-  - Resultados: resultados.md
+  - Condiciones: condiciones.md
   - Solucion C++: c++.md
   - Solucion Python: python.md
+  - Resultados: resultados.md
   - Bibligrafía: bibliografia.md
+  
 
 
 
