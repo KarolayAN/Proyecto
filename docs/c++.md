@@ -141,7 +141,7 @@ std::vector<double> crearLaplacianoExplicito(int n, double r) {
 La función resuelve la ecuación de calor en 2D dividiendo la parte temporal de problema en 2 subpasos:
 Una parte para la dirección y y otra para la dirección x. Esto facilita poder utilizar el método de Crank
 Nicholson al reducirlo con matrices tridiagonales. Además en cada subpaso se calcula la multiplicación de de matrices y la resolución de la matriz tridiagonal por medio del método de Thomas.\
-Para la parte de la paralelización se utilizó estratégicamente en los bucles for que involucran filas y columnas  de la malla, ya que al agregarlo en dichos `for`, la velocidad del código mejora considerablemente. Por último, también se calcularon las condiciones de frontera de Dirichlet en los bordes de la malla.\
+Para la parte de la paralelización se utilizó estratégicamente en los bucles for que involucran filas y columnas  de la malla, ya que al agregarlo en dichos `for`, la velocidad del código mejora considerablemente.\
 `matriz` Matriz almacenada como un vector 1D.\
 `n` Número de puntos a utilizar\
 `r` Valor de la variable discretizada que relaciona la parte espacial y temporal de la ecuación diferencial.\
@@ -208,152 +208,71 @@ void CN_2D_ADI_Advance(std::vector<double>& matriz, int n, double r, int pasos,
             for (int j = 0; j < n; ++j)
                 matriz[i * n + j] = fila[j];
         }
-
-
-        # pragma omp parallel for
-        for (int i = 0; i < n; i++) {
-            matriz[i * n + 0] = bordeInf;
-            matriz[i * n + n -1] = bordeSup;
-            matriz[0 * n + i] = bordeIzq;
-            matriz[(n - 1) * n + i]= bordeDer;
-        }
+    }
 }
-                       }
-
 ```
 
-**Función para la condición inicial del paraboloide centrado**\
-`x` Coordenada x normalizada (entre 0 y 1).\
-`y` Coordenada y normalizada (entre 0 y 1).\
-`return` Valor de la distribución de la temperatura en el paraboloide.
+**Clase** 
+`solucion_ecuacion_calor` Consiste en los procesos necesarios para resolver el problema.
+En esta se configuran las condiciones iniciales y de frontera, además de que se crean las funciones con las cuáles se calcula la solución del 
+problema.
+
+**Atributos**
+- `n, dt, t, alpha2, ds, r, pasos`: parámetros numéricos.
+- `opcion`: condición inicial seleccionada.
+- `condicion_frontera`: tipo de borde (1: Dirichlet, 2: Neumann, 3: Robin).
+- `matriz`: contiene los valores de temperatura.
+
+**Funciones públicas**
 
 ```cpp
-double paraboloide(double x, double y) {
-    double cx = x - 0.5, cy = y - 0.5;
-    return 1000 * (cx*cx + cy*cy);
-}
+solucion_ecuacion_calor(int n, double dt, double t, double alpha2 = 1.0);
+void opcion_escogida(int opcion_variable);
+void condicion_front_escog(int condicion);
+void aplicar_condicion_inicial();
+void evaluar_condicion_frontera();
+void resolver();
+void imprimir();
 ```
 
-Función para la condición inicial del toroide.
-x Coordenada x normalizada (entre 0 y 1).
-y Coordenada y normalizada (entre 0 y 1).
-return Valor de la distribución de la temperatura en el toroide.
+**Funciones privadas**
 
 ```cpp
-double toroide(double x, double y){
-    double dx = x - 0.5;
-    double dy = y - 0.5;
-    double radio = sqrt((dx * dx) + (dy * dy));
-    double dist_rad = radio - 0.25;
-    return 1000 * exp(-(dist_rad * dist_rad) / (0.0035));
-}
+double evaluar_condicion_ini(double x, double y);
 ```
-
-Función para la condición inicial de la barra centrada.
-x Coordenada x normalizada (entre 0 y 1).
-y Coordenada y normalizada (entre 0 y 1).
-return Valor de la distribución de la temperatura en la barra centrada.
-
-```cpp
-double barra_horizontal(double x, double y){
-    double orientacion = abs(y - 0.5);
-    return (orientacion < 0.1) ? 1000 : 0;
-}
-```
-
-**Función para la condición inicial de la campana gaussiana centrada**\
-`x` Coordenada x normalizada (entre 0 y 1).\
-`y` Coordenada y normalizada (entre 0 y 1).\
-`return` Valor de la distribución de la temperatura en la campana gaussiana centrada.
- 
-```cpp
-double campana_gaussiana_centr(double x, double y){
-    double dx = x - 0.5;
-    double dy = y - 0.5;
-    double radio = sqrt((dx * dx) + (dy * dy));
-    return 1000 * exp(-radio / 0.01);
-}
-```
-
-Función para la condición inicial de la campana gaussiana estrecha.
-x Coordenada x normalizada (entre 0 y 1).
-y Coordenada y normalizada (entre 0 y 1).
-return Valor de la distribución de la temperatura en la campana gaussiana estrecha.
-
-```cpp
-double campana_gaussiana_estr(double x, double y){
-    double dx = x - 0.5;
-    double dy = y - 0.5;
-    double radio = sqrt((dx * dx) + (dy * dy));
-    return 1000 * exp(-radio / 0.000001);
-}
-```
-
-**Función para la condición inicial de la onda senosoidal**\
-`x` Coordenada x normalizada (entre 0 y 1).\
-`y` Coordenada y normalizada (entre 0 y 1).\
-`return` Valor de la distribución de la temperatura en la onda senosoidal.
-
-```cpp
-double onda_senosoidal(double x, double y){
-    const double Pi = 3.1415926535;
-    return 1000 * (sin(2 * Pi * x) * sin(2 * Pi * y));
-}
-```
+Evaluá la condición inicial dependiendo de la opción escogida.
 
 **Función main**\
-Inicializa todo el código para resolver la ecuación de calor en 2-D. Para esto el usuario primero debe de escoger una de las seis condiciones iniciales. El programa evalúa dicha condición incial usando el método de Crank Nicholson y la reducción de la matriz tridiagonal con el método de Thomas, y luego imprime el resultado obtenido.\
+Inicializa todo el código para resolver la ecuación de calor en 2-D. Para esto el usuario primero debe de escoger una de las tres condiciones iniciales y una de las tres condiciones de frontera. El programa evalúa dicha condición incial usando el método de Crank Nicholson y la reducción de la matriz tridiagonal con el método de Thomas, y luego imprime el resultado obtenido.\
 `return 0` si el programa se ejecuta sin ningún problema, y 1 si la opción elegida no era válida.
 
 ```cpp
 int main() {
-    int ns = 26;
-    double dt = .00001, t = .1;
-    double alpha2 = 1, x0 = 0, xL = 0, y0 = 0, yL = 0;
-    double ds = 1.0 / (ns - 1);
-    double r = alpha2 * dt / (ds * ds);
-    int pasos = (int)(t / dt);
+    int ns = 50;
+    double dt = 0.0005, t = 0.1;
 
+    int opcion_cond_ini;
+    std::cout << "Escoja una de las siguientes condiciones iniciales al ingresar el número correspondiente: \n";
+    std::cout << " 1. Pulso Gaussiano centrado \n2. Paraboloide centrado \n3. Onda senoidal suave \n";
+    std::cin >> opcion_cond_ini;
 
-int opcion_cond_ini;
-std::cout << "Escoja una de las siguientes condiciones iniciales al ingresar el número correspondiente: \n";
-std::cout << " 1. Paraboloide centrado \n2. Toroide \n3. Barra horizontal centrada";
-std::cout << " \n4.Campana gaussiana centrada \n5. Campana gaussiana estrecha \n6. Onda senosoidal\n";
+    int condicion_frontera;
+    std::cout << "Escoja una de las siguientes condiciones de frontera al ingresar el número correspondiente: \n";
+    std::cout << " 1. Dirichlet \n2. Neuman \n3. Robin \n";
+    std::cin >> condicion_frontera;
 
-std::cin >> opcion_cond_ini;
-
-
-if (opcion_cond_ini < 1 || opcion_cond_ini > 6){
-    std::cerr << "La opción elegida no es válida. \n";
-    return 1;
-}
-
-
-    std::vector<double> matriz = crearMatrizCeros(ns, ns);
-    for (int i = 0; i < ns; i++) {
-        for (int j = 0; j < ns; j++) {
-            double x = i * ds;
-            double y = j * ds;
-            if (opcion_cond_ini == 1) matriz[i * ns + j] = paraboloide(x, y);
-            else if (opcion_cond_ini == 2) matriz[i * ns + j] = toroide(x, y);
-            else if (opcion_cond_ini == 3) matriz[i * ns + j] = barra_horizontal(x, y);
-            else if (opcion_cond_ini == 4) matriz[i * ns + j] = campana_gaussiana_centr(x, y);
-            else if (opcion_cond_ini == 5) matriz[i * ns + j] = campana_gaussiana_estr(x, y);
-            else if (opcion_cond_ini == 6) matriz[i * ns + j] = onda_senosoidal(x, y);
-        }
+    if (opcion_cond_ini < 1 || opcion_cond_ini > 3) {
+        std::cerr << "La opción elegida no es válida. \n";
+        return 1;
     }
 
-
-    for (int i = 0;i < ns; i++){
-        matriz[i * ns + 0] = y0;
-        matriz[i * ns + (ns -1)] = yL;
-        matriz[0 * ns + i] = x0;
-        matriz[(ns - 1) * ns + i] = xL;
-
-    }
-
-    CN_2D_ADI_Advance(matriz, ns, r, pasos, x0, xL, y0, yL);
-    imprimirMatriz(matriz, ns);
+    // Se crea el constructor y se usa para llamar las funciones.
+    solucion_ecuacion_calor constructor(ns, dt, t);
+    constructor.opcion_escogida(opcion_cond_ini);
+    constructor.condicion_front_escog(condicion_frontera);
+    constructor.aplicar_condicion_inicial();
+    constructor.resolver();
+    constructor.imprimir();
 
     return 0;
 }
