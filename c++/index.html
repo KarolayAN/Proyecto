@@ -349,7 +349,320 @@
 
 
 
-<h1 id="solucion-en-c">Solucion en C++</h1>
+<h1 id="solucion-en-c">Solución en C++</h1>
+<p>El presente código en C++ tiene como objetivo resolver la ecuación de calor en dos dimensiones. Para resolverla de forma eficiente, el código implementa el método Crank–Nicolson con Alternating Direction Implicit (ADI). Este método permite dividir cada paso temporal en dos subpasos alternados en dirección horizontal y vertical, facilitando la resolución de matrices tridiagonales mediante el eficiente método de Thomas.</p>
+<p>Además, se integran técnicas de paralelismo de memoria compartida usando OpenMP, lo que permite reducir significativamente los tiempos de cálculo. El código está diseñado para permitir la elección entre distintas condiciones iniciales</p>
+<hr />
+<p>La siguiente función crea una matriz representada como un vector de 1D:\
+Se utilizaron las siguientes bibliotecas:</p>
+<ul>
+<li><code>&lt;iostream&gt;</code>: Para poder utilizar inputs y outputs con std.</li>
+<li><code>&lt;cmath&gt;</code>: Para poder agregar funciones matemáticas</li>
+<li><code>&lt;vector&gt;</code>: Para poder usar std::vector</li>
+<li><code>&lt;omp.h&gt;</code>: Para paralelizar con OpenMP</li>
+</ul>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+#include &lt;vector&gt;
+#include &lt;omp.h&gt;
+</code></pre>
+<p><strong>Función que crea una matriz llena de ceros, y la almacena en 1 vector de 1D</strong>\
+<code>n</code> Número de filas.\
+<code>m</code> Número de columnas.\
+<code>return std::vector&lt;double&gt;</code> Se retorna un vector <code>nxm</code> que contiene los arreglos de ceros</p>
+<pre><code class="language-cpp">std::vector&lt;double&gt; crearMatrizCeros(int n, int m) {
+    return std::vector&lt;double&gt;(n * m, 0.0);
+}
+</code></pre>
+<p><strong>Función que imprime la matriz creada anteriormente</strong>\
+Se imprime en la consola la matriz nxn contenida en un vector de 1D. Para esto se utilzan 3 cifras decimales por cada entrada de la matriz.\
+<code>matriz</code> Vector que contiene la matriz creada previamente de forma lineal.\
+<code>n</code> Número de filas de la matriz.</p>
+<pre><code class="language-cpp">void imprimirMatriz(const std::vector&lt;double&gt;&amp; matriz, int n) {
+    for (int i = 0; i &lt; n; ++i) {
+        for (int j = 0; j &lt; n; ++j) {
+            printf(&quot;%.3f &quot;, matriz[i * n + j]);
+        }
+        printf(&quot;\n&quot;);
+    }
+    printf(&quot;\n&quot;);
+}
+</code></pre>
+<p><strong>Función que multiplica la matriz anteior por un vector.</strong>\
+Se hace una multiplicación entre la matriz guardada en el vector 1D y un vector de las mismas dimensiones. 
+El resultado obtenido de la multiplicación sobreescribe el vector original utilizado.\
+<code>matriz</code> Vector que contiene la matriz creada previamente de forma lineal.\
+<code>vec</code> Vector por el cual se multiplica la matriz, y en el cual se guardan los resultados de la multiplicación.\
+<code>n</code> Número de filas de la matriz.\</p>
+<pre><code class="language-cpp">void multiplicarMatrizVector(const std::vector&lt;double&gt;&amp; matriz, std::vector&lt;double&gt;&amp; vec, int n) {
+    std::vector&lt;double&gt; temp(n, 0.0);
+    for (int i = 0; i &lt; n; ++i)
+        for (int j = 0; j &lt; n; ++j)
+            temp[i] += matriz[i * n + j] * vec[j];
+    vec = temp; 
+}
+</code></pre>
+<p><strong>Función que resuelve el sistema tridiagonal usando el método de Thomas</strong>\
+Se resuelve el sistema de ecuaciones lineales obtenido, el cual incluye una matriz tridiagonal, utilizando el método de Thomas. La solución se almacena en el vector u, sobrescribiendo así su contenido.\
+<code>T</code> Matriz tridiagonal resuelta por medio del método de Thomas, y almacenada de forma 1D.\
+<code>u</code> Vector con los términos independientes del sistema tridiagonal.\
+<code>n</code> Dimensión de la matriz.\
+El resultado final se guarda en el vector <code>u</code>.</p>
+<pre><code class="language-cpp">void resolverTridiagonal(const std::vector&lt;double&gt;&amp; T, std::vector&lt;double&gt;&amp; u, int n) {
+    std::vector&lt;double&gt; a(n, 0.0), b(n, 0.0), c(n, 0.0), x(n, 0.0);
+    for (int i = 0; i &lt; n; i++) b[i] = T[i * n + i];
+    for (int i = 0; i &lt; n-1; i++) {
+        a[i+1] = T[(i+1) * n + i];
+        c[i] = T[i * n + (i + 1)];
+    }
+    c[0] /= b[0];
+    x[0] = u[0] / b[0];
+    for (int i = 1; i &lt; n; i++) {
+        double m = b[i] - a[i] * c[i-1];
+        c[i] /= m;
+        x[i] = (u[i] - a[i] * x[i-1]) / m;
+    }
+    for (int i = n - 2; i &gt;= 0; i--)
+        x[i] -= c[i] * x[i + 1];
+    u = x;
+}
+</code></pre>
+<p><strong>Función que crea una matriz tridiagonal implicita</strong>\
+ Se crea una matriz tridiagonal implícita con valores 1+2r en la diagonal principal y -r en las otras dos diagonales.\
+ <code>n</code> Dimensión de la matriz.\
+ <code>r</code> Valor de la variable discretizada que relaciona la parte espacial y temporal de la ecuación diferencial.\
+<code>return Laplaciano</code> Se retorna un Laplaciano tridiagonal implícito nxn.</p>
+<pre><code class="language-cpp">std::vector&lt;double&gt; crearLaplacianoImplicito(int n, double r) {
+    std::vector&lt;double&gt; Laplaciano(n * n, 0.0);
+    for (int i = 0; i &lt; n; ++i) {
+        if (i == 0 || i == n - 1) {
+            Laplaciano[i * n + i] = 1.0;
+        } else {
+            Laplaciano[i * n + (i - 1)] = -r;
+            Laplaciano[i * n + i] = 1 + 2 * r;
+            Laplaciano[i * n + (i + 1)] = -r;
+        }
+    }
+    return Laplaciano;
+}
+</code></pre>
+<p><strong>Función que crea una matriz tridiagonal explicita</strong>\
+Se crea una matriz tridiagonal explícita con valores 1-2r en la diagonal principal y r en las otras dos diagonales.\
+<code>n</code> Dimensión de la matriz.\
+<code>r</code> Valor de la variable discretizada que relaciona la parte espacial y temporal de la ecuación diferencial.\
+<code>return Laplaciano</code> Se retorna un Laplaciano tridiagonal explícito nxn.</p>
+<pre><code class="language-cpp">std::vector&lt;double&gt; crearLaplacianoExplicito(int n, double r) {
+    std::vector&lt;double&gt; Laplaciano(n * n, 0.0);
+    for (int i = 0; i &lt; n; ++i) {
+        if (i == 0 || i == n - 1) {
+            Laplaciano[i * n + i] = 1;
+        } else {
+            Laplaciano[i * n + (i - 1)] = r;
+            Laplaciano[i * n + i] = 1 - 2 * r;
+            Laplaciano[i * n + (i + 1)] = r;
+        }
+    }
+    return  Laplaciano;
+}
+</code></pre>
+<p><strong>Función que calcula el método de Crank Nicholson con Alternating Direction Implicit (ADI)</strong>\
+La función resuelve la ecuación de calor en 2D dividiendo la parte temporal de problema en 2 subpasos:
+Una parte para la dirección y y otra para la dirección x. Esto facilita poder utilizar el método de Crank
+Nicholson al reducirlo con matrices tridiagonales. Además en cada subpaso se calcula la multiplicación de de matrices y la resolución de la matriz tridiagonal por medio del método de Thomas.\
+Para la parte de la paralelización se utilizó estratégicamente en los bucles for que involucran filas y columnas  de la malla, ya que al agregarlo en dichos <code>for</code>, la velocidad del código mejora considerablemente. Por último, también se calcularon las condiciones de frontera de Dirichlet en los bordes de la malla.\
+<code>matriz</code> Matriz almacenada como un vector 1D.\
+<code>n</code> Número de puntos a utilizar\
+<code>r</code> Valor de la variable discretizada que relaciona la parte espacial y temporal de la ecuación diferencial.\
+<code>pasos</code> Número de pasos a utilizar.\
+<code>bordeIzq</code> Valor de frontera en el borde izquierdo.\
+<code>bordeDer</code> Valor de frontera en el borde derecho.\
+<code>bordeInf</code> Valor de frontera del borde inferior.\
+<code>bordeSup</code> Valor de frontera del borde superior.</p>
+<pre><code class="language-cpp">void CN_2D_ADI_Advance(std::vector&lt;double&gt;&amp; matriz, int n, double r, int pasos,
+                       double bordeIzq, double bordeDer, double bordeInf, double bordeSup) {
+
+    r = r / 2.0;
+    std::vector&lt;double&gt; S = crearLaplacianoExplicito(n, r);
+    std::vector&lt;double&gt; T = crearLaplacianoImplicito(n, r);
+    std::vector&lt;double&gt; temp(n * n, 0.0);
+    std::vector&lt;double&gt; fila(n);
+    std::vector&lt;double&gt; columna(n);
+
+    for (int t = 0; t &lt; pasos; ++t) {
+
+        # pragma omp parallel for
+        for (int i = 0; i &lt; n; ++i) {
+          std::vector&lt;double&gt; fila(n);
+          for (int j = 0; j &lt; n; ++j)
+            fila[j] = matriz[i * n +j];
+          multiplicarMatrizVector(S, fila, n);
+          for (int j = 0; j &lt; n; ++j)
+            matriz[i * n +j] = fila[j];
+        }
+
+
+        # pragma omp parallel for
+        for (int j = 0; j &lt; n; ++j) {
+            std::vector&lt;double&gt; columna(n);
+            for (int i = 0; i &lt; n; ++i)
+                columna[i] = matriz[i * n + j];
+            resolverTridiagonal(T, columna, n);
+            for (int i = 0; i &lt; n; ++i)
+                matriz[i * n + j] = columna[i];
+        }
+
+
+
+        # pragma omp parallel for
+        for (int j = 0; j &lt; n; ++j) {
+          std::vector&lt;double&gt; columna(n);
+          for (int i = 0; i &lt; n; ++i)
+            columna[i] = matriz[i * n +j];
+          multiplicarMatrizVector(S, columna, n);
+          for (int i = 0; i &lt; n; ++i)
+            matriz[i * n + j] = columna[i];
+        }
+
+
+
+        # pragma omp parallel for
+        for (int i = 0; i &lt; n; ++i) {
+            std::vector&lt;double&gt; fila(n);
+            for (int j = 0; j &lt; n; ++j)
+                fila[j] = matriz[i * n +j];
+            resolverTridiagonal(T, fila, n);
+            for (int j = 0; j &lt; n; ++j)
+                matriz[i * n + j] = fila[j];
+        }
+
+
+        # pragma omp parallel for
+        for (int i = 0; i &lt; n; i++) {
+            matriz[i * n + 0] = bordeInf;
+            matriz[i * n + n -1] = bordeSup;
+            matriz[0 * n + i] = bordeIzq;
+            matriz[(n - 1) * n + i]= bordeDer;
+        }
+}
+                       }
+
+</code></pre>
+<p><strong>Función para la condición inicial del paraboloide centrado</strong>\
+<code>x</code> Coordenada x normalizada (entre 0 y 1).\
+<code>y</code> Coordenada y normalizada (entre 0 y 1).\
+<code>return</code> Valor de la distribución de la temperatura en el paraboloide.</p>
+<pre><code class="language-cpp">double paraboloide(double x, double y) {
+    double cx = x - 0.5, cy = y - 0.5;
+    return 1000 * (cx*cx + cy*cy);
+}
+</code></pre>
+<p>Función para la condición inicial del toroide.
+x Coordenada x normalizada (entre 0 y 1).
+y Coordenada y normalizada (entre 0 y 1).
+return Valor de la distribución de la temperatura en el toroide.</p>
+<pre><code class="language-cpp">double toroide(double x, double y){
+    double dx = x - 0.5;
+    double dy = y - 0.5;
+    double radio = sqrt((dx * dx) + (dy * dy));
+    double dist_rad = radio - 0.25;
+    return 1000 * exp(-(dist_rad * dist_rad) / (0.0035));
+}
+</code></pre>
+<p>Función para la condición inicial de la barra centrada.
+x Coordenada x normalizada (entre 0 y 1).
+y Coordenada y normalizada (entre 0 y 1).
+return Valor de la distribución de la temperatura en la barra centrada.</p>
+<pre><code class="language-cpp">double barra_horizontal(double x, double y){
+    double orientacion = abs(y - 0.5);
+    return (orientacion &lt; 0.1) ? 1000 : 0;
+}
+</code></pre>
+<p><strong>Función para la condición inicial de la campana gaussiana centrada</strong>\
+<code>x</code> Coordenada x normalizada (entre 0 y 1).\
+<code>y</code> Coordenada y normalizada (entre 0 y 1).\
+<code>return</code> Valor de la distribución de la temperatura en la campana gaussiana centrada.</p>
+<pre><code class="language-cpp">double campana_gaussiana_centr(double x, double y){
+    double dx = x - 0.5;
+    double dy = y - 0.5;
+    double radio = sqrt((dx * dx) + (dy * dy));
+    return 1000 * exp(-radio / 0.01);
+}
+</code></pre>
+<p>Función para la condición inicial de la campana gaussiana estrecha.
+x Coordenada x normalizada (entre 0 y 1).
+y Coordenada y normalizada (entre 0 y 1).
+return Valor de la distribución de la temperatura en la campana gaussiana estrecha.</p>
+<pre><code class="language-cpp">double campana_gaussiana_estr(double x, double y){
+    double dx = x - 0.5;
+    double dy = y - 0.5;
+    double radio = sqrt((dx * dx) + (dy * dy));
+    return 1000 * exp(-radio / 0.000001);
+}
+</code></pre>
+<p><strong>Función para la condición inicial de la onda senosoidal</strong>\
+<code>x</code> Coordenada x normalizada (entre 0 y 1).\
+<code>y</code> Coordenada y normalizada (entre 0 y 1).\
+<code>return</code> Valor de la distribución de la temperatura en la onda senosoidal.</p>
+<pre><code class="language-cpp">double onda_senosoidal(double x, double y){
+    const double Pi = 3.1415926535;
+    return 1000 * (sin(2 * Pi * x) * sin(2 * Pi * y));
+}
+</code></pre>
+<p><strong>Función main</strong>\
+Inicializa todo el código para resolver la ecuación de calor en 2-D. Para esto el usuario primero debe de escoger una de las seis condiciones iniciales. El programa evalúa dicha condición incial usando el método de Crank Nicholson y la reducción de la matriz tridiagonal con el método de Thomas, y luego imprime el resultado obtenido.\
+<code>return 0</code> si el programa se ejecuta sin ningún problema, y 1 si la opción elegida no era válida.</p>
+<pre><code class="language-cpp">int main() {
+    int ns = 26;
+    double dt = .00001, t = .1;
+    double alpha2 = 1, x0 = 0, xL = 0, y0 = 0, yL = 0;
+    double ds = 1.0 / (ns - 1);
+    double r = alpha2 * dt / (ds * ds);
+    int pasos = (int)(t / dt);
+
+
+int opcion_cond_ini;
+std::cout &lt;&lt; &quot;Escoja una de las siguientes condiciones iniciales al ingresar el número correspondiente: \n&quot;;
+std::cout &lt;&lt; &quot; 1. Paraboloide centrado \n2. Toroide \n3. Barra horizontal centrada&quot;;
+std::cout &lt;&lt; &quot; \n4.Campana gaussiana centrada \n5. Campana gaussiana estrecha \n6. Onda senosoidal\n&quot;;
+
+std::cin &gt;&gt; opcion_cond_ini;
+
+
+if (opcion_cond_ini &lt; 1 || opcion_cond_ini &gt; 6){
+    std::cerr &lt;&lt; &quot;La opción elegida no es válida. \n&quot;;
+    return 1;
+}
+
+
+    std::vector&lt;double&gt; matriz = crearMatrizCeros(ns, ns);
+    for (int i = 0; i &lt; ns; i++) {
+        for (int j = 0; j &lt; ns; j++) {
+            double x = i * ds;
+            double y = j * ds;
+            if (opcion_cond_ini == 1) matriz[i * ns + j] = paraboloide(x, y);
+            else if (opcion_cond_ini == 2) matriz[i * ns + j] = toroide(x, y);
+            else if (opcion_cond_ini == 3) matriz[i * ns + j] = barra_horizontal(x, y);
+            else if (opcion_cond_ini == 4) matriz[i * ns + j] = campana_gaussiana_centr(x, y);
+            else if (opcion_cond_ini == 5) matriz[i * ns + j] = campana_gaussiana_estr(x, y);
+            else if (opcion_cond_ini == 6) matriz[i * ns + j] = onda_senosoidal(x, y);
+        }
+    }
+
+
+    for (int i = 0;i &lt; ns; i++){
+        matriz[i * ns + 0] = y0;
+        matriz[i * ns + (ns -1)] = yL;
+        matriz[0 * ns + i] = x0;
+        matriz[(ns - 1) * ns + i] = xL;
+
+    }
+
+    CN_2D_ADI_Advance(matriz, ns, r, pasos, x0, xL, y0, yL);
+    imprimirMatriz(matriz, ns);
+
+    return 0;
+}
+</code></pre>
 
 
 
