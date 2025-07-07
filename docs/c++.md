@@ -1,16 +1,21 @@
 # Solución en C++
+
 El presente código en C++ tiene como objetivo resolver la ecuación de calor en dos dimensiones. Para resolverla de forma eficiente, el código implementa el método Crank–Nicolson con Alternating Direction Implicit (ADI). Este método permite dividir cada paso temporal en dos subpasos alternados en dirección horizontal y vertical, facilitando la resolución de matrices tridiagonales mediante el eficiente método de Thomas.
 
 Además, se integran técnicas de paralelismo de memoria compartida usando OpenMP, lo que permite reducir significativamente los tiempos de cálculo. El código está diseñado para permitir la elección entre distintas condiciones iniciales
 
 ---------------------------------------------------------
 
-La siguiente función crea una matriz representada como un vector de 1D:\
+La siguiente función crea una matriz representada como un vector de 1D:
+
 Se utilizaron las siguientes bibliotecas:
  
 * `<iostream>`: Para poder utilizar inputs y outputs con std.
+  
 * `<cmath>`: Para poder agregar funciones matemáticas
+  
 * `<vector>`: Para poder usar std::vector
+  
 * `<omp.h>`: Para paralelizar con OpenMP
 
 ```cpp
@@ -21,6 +26,7 @@ Se utilizaron las siguientes bibliotecas:
 ```
 
 **Función que crea una matriz llena de ceros, y la almacena en 1 vector de 1D**
+
 `crearMatrizCeros(int n, int m)` genera una matriz de ceros con `n` filas y `m` columnas, representada como un vector unidimensional (`std::vector<double>`) de tamaño `n × m`. 
 
 `[i * n + j]` convierte coordenadas bidimensionales (i, j) fila y columna de una matriz 2D, en una posición dentro de un vector de una sola dimensión (1D).
