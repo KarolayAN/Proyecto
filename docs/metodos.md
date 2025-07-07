@@ -5,31 +5,40 @@ Al buscar una metodología numérica para resolver la ecuación de calor, se pue
 ## Método de Crank-Nicolson
 
 Este método consiste en una técnica numérica para resolver ecuaciones diferenciales parciales, especialmente la ecuacion de calor o ecuación de difusión. Es un metodo semi-implicito y de segundo orden; por lo que combina la precisión del método del punto medio y la estabilidad del método implicito. 
-En síntesis, este método se basa en una promediación entre el método explícito, que evalúa  en el tiempo actual $t_n$ y el método implicito, que evalúa en el siguiente tiempo $t_n+1$. \
+Este método se basa en una promediación entre el método explícito, que evalúa  en el tiempo actual $t_n$ y el método implicito, que evalúa en el siguiente tiempo $t_n+1$. 
+
 En el apartado de los codigos, se explicara a detalle los codigos realizados con el fin de comprender a totalidad cómo funciona el método de Crank-Nicolson para resolver la ecuacion de calor en 2D. 
 
 
 **Ventajas:**
 
-**1)** Estabilidad incondicional: Es estable para cualquier tamano de paso en el tiempo, lo que permite hacer simulaciones con pasos grandes sin que el error explote.\
-**2)** Mayor precision: Tanto el tiempo como el espacio es de segudno orden, significa que es mas preciso que los metodos de primer orden, como lo es el metodo explicito o el implicito simple.\
+**1)** Estabilidad incondicional: Es estable para cualquier tamano de paso en el tiempo, lo que permite hacer simulaciones con pasos grandes sin que el error explote.
+
+**2)** Mayor precision: Tanto el tiempo como el espacio es de segudno orden, significa que es mas preciso que los metodos de primer orden, como lo es el metodo explicito o el implicito simple.
+
 **3)** Simetria temporal: Este metodo es centrado en el tiempo, lo que lo hace ideal para problemas en donde se debe de conservar energia o simetria. 
 
 **Desventajas:**
 
-**1)** Se requiere resolver un sistema lineal en cada paso: Con el metodo de Crank-Nicolson tenemos que resolver matrices en cada paso del tiempo, lo que es mucho mas costoso computacionalmente.\
-**2)** Oscilaciones no fisicas: Si esto se aplica a problemas de condiciones inciales, puede producir oscilaciones no reales.\
+**1)** Se requiere resolver un sistema lineal en cada paso: Con el metodo de Crank-Nicolson tenemos que resolver matrices en cada paso del tiempo, lo que es mucho mas costoso computacionalmente.
+
+**2)** Oscilaciones no fisicas: Si esto se aplica a problemas de condiciones inciales, puede producir oscilaciones no reales.
+
 **3)** Implementacion mas compleja: Este metodo requiere mas trabajo para programarlo, puesto que combina terminos del tiempo actual y del siguiente paso.
 
 ## Alternating Direction Implicit (ADI)
+
 Es un método que se utiliza para resolver más fácilmente la ecuación de calor en 2D.
 En lugar de resolver una ecuación implícita en dos dimensiones al mismo tiempo (lo que da lugar a una matriz muy grande), el método ADI divide el paso de tiempo en dos mitades:
+
 * En la primera mitad del paso de tiempo, se utiliza el método implícito solo en la dirección $x$, y se deja $y$ explícito.
+  
 * En la segunda mitad, se hace lo mismo, pero ahora $y$ es implícito y $x$ explícito.
 
 Esto reduce el problema de 2D a varios problemas 1D, que son mucho más fáciles de resolver. Cuando se utiliza ADI, en cada paso intermedio es necsario resolver muchos sistemas 1D implícitos (uno por cada fila o columna) con forma tridiagonal.
 
  ## Matriz Tridiagonal
+ 
  En el proceso de implementación del método de Crank-Nicolson y API para la resolución de la ecuación de calor; organuzando los terminos, la rucación se convierte en una ecuación matricial de la forma: **$A\vec{\phi^{n+1}}=\vec{d^n}$**, donde A es una mtriz es tridiagonal de N dimensiones, con N números de subdivisiones de la descretización espacial, esto se puede visualizar como:
 
  ![Matriz Tridiadonal](imagenes/thomas.png) 
